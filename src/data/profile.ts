@@ -5,7 +5,7 @@ export const profile = {
   name: "Akbar Anvarkhujaev",
   location: "London · Los Angeles",
   intro:
-    "I study Mathematics and Economics at UCLA and am spending 2026–27 at the London School of Economics. I work on randomized algorithms and quantitative modelling, and I'm looking for opportunities in quantitative research and trading.",
+    "Hi, I'm Akbar! I'm a Mathematics and Economics student at UCLA, currently spending a year abroad at the London School of Economics. I'm interested in the intersection of mathematics, economics, technology, and the occasional idea that sounds slightly ridiculous until you start working on it. Outside the classroom, I enjoy building things, exploring research questions, and following films and Formula 1. I'm also a geography enthusiast and a firm believer that there's always something interesting to learn about almost any subject.",
   // Shown in this order; the first one is used for the "Email" link in the footer.
   emails: ["a.anvarkhujaev@lse.ac.uk", "akbruin06@g.ucla.edu"],
   linkedin: "https://www.linkedin.com/in/akbar-anvarkhujaev-1b61212ab",
