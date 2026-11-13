@@ -1,0 +1,33 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import PaperCard from "../components/PaperCard.astro";
+import headshot from "../assets/headshot.jpg";
+import { profile } from "../data/profile";
+---
+
+<Base>
+  <div class="hero">
+    <Image src={headshot} alt={`Portrait of ${profile.name}`} width={288} height={288} loading="eager" fetchpriority="high" />
+    <div>
+      <h1>{profile.name}</h1>
+      <p class="location">{profile.location}</p>
+    </div>
+  </div>
+
+  <p class="lede">{profile.intro}</p>
+
+  <div class="actions">
+    {profile.emails.map((e, i) => (
+      <a class={i === 0 ? "btn primary" : "btn"} href={`mailto:${e}`}>{e}</a>
+    ))}
+    <a class="btn" href={profile.linkedin} target="_blank" rel="me noopener">LinkedIn</a>
+    <a class="btn" href={profile.github} target="_blank" rel="me noopener">GitHub</a>
+  </div>
+
+  <section id="research">
+    <p class="eyebrow">Research</p>
+    <h2>Publication</h2>
+    <PaperCard />
+  </section>
+</Base>

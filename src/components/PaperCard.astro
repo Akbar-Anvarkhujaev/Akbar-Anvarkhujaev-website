@@ -1,0 +1,28 @@
+---
+import { publication } from "../data/profile";
+import { rich } from "../lib/rich";
+
+interface Props { showAbstract?: boolean }
+const { showAbstract = true } = Astro.props;
+---
+
+<article class="paper">
+  <h3><a href={publication.url} target="_blank" rel="noopener">{publication.title}</a></h3>
+  <p class="authors">
+    {publication.authors.map((a, i) => (
+      <>{a === publication.me ? <strong>{a}</strong> : a}{i < publication.authors.length - 1 ? ", " : ""}</>
+    ))}
+  </p>
+  <span class="venue">{publication.venue}</span>
+  <p set:html={rich(publication.summary)} />
+  {showAbstract && (
+    <details class="abstract">
+      <summary>Read the abstract</summary>
+      <p set:html={rich(publication.abstract)} />
+      <ul class="tags">{publication.keywords.map((k) => <li>{k}</li>)}</ul>
+    </details>
+  )}
+  <p class="paper-links">
+    <a href={publication.url} target="_blank" rel="noopener">OpenReview →</a>
+  </p>
+</article>

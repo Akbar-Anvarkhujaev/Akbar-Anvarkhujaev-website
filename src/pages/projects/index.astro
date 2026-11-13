@@ -1,0 +1,31 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { getProjects } from "../../lib/projects";
+
+const all = await getProjects();
+const done = all.filter((p) => p.data.status === "complete");
+const wip = all.filter((p) => p.data.status === "in-progress");
+---
+
+<Base wide title="Projects" description="Quantitative finance, research and software projects by Akbar Anvarkhujaev.">
+  <div class="page-head">
+    <p class="eyebrow">Projects</p>
+    <h1>Projects</h1>
+    <p class="subtitle">Quantitative finance, research and software. Each write-up covers the question, the method, the results and what I would do next.</p>
+  </div>
+
+  <div class="cards">
+    {done.map((p) => <ProjectCard project={p} />)}
+  </div>
+
+  {wip.length > 0 && (
+    <section>
+      <p class="eyebrow">Currently building</p>
+      <h2>In progress</h2>
+      <div class="cards">
+        {wip.map((p) => <ProjectCard project={p} />)}
+      </div>
+    </section>
+  )}
+</Base>

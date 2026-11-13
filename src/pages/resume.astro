@@ -1,0 +1,73 @@
+---
+import Base from "../layouts/Base.astro";
+import Entry from "../components/Entry.astro";
+import PaperCard from "../components/PaperCard.astro";
+import { profile, experience, education, coursework, awards, leadership, skills, interests } from "../data/profile";
+import { hasCv } from "../lib/rich";
+
+const cv = hasCv();
+---
+
+<Base title="Resume" description="Resume of Akbar Anvarkhujaev: education, experience, research, awards and skills.">
+  <div class="page-head resume-head">
+    <div>
+      <p class="eyebrow">Resume</p>
+      <h1>{profile.name}</h1>
+      <p class="subtitle">
+        {profile.location}
+        {profile.emails.map((e) => <> · <a href={`mailto:${e}`}>{e}</a></>)}
+      </p>
+    </div>
+    <div class="actions no-print">
+      {cv && <a class="btn primary" href={`/${profile.cvFile}`} download>Download PDF</a>}
+      <button class={cv ? "btn" : "btn primary"} type="button" id="print">Print / save as PDF</button>
+    </div>
+  </div>
+
+  <section id="education">
+    <h2>Education</h2>
+    {education.map((e) => <Entry {...e} />)}
+    {coursework.length > 0 && (
+      <p class="muted"><strong>Relevant coursework:</strong> {coursework.join(" · ")}</p>
+    )}
+  </section>
+
+  <section id="experience">
+    <h2>Experience</h2>
+    {experience.map((e) => <Entry {...e} />)}
+  </section>
+
+  <section id="research">
+    <h2>Research</h2>
+    <PaperCard showAbstract={false} />
+  </section>
+
+  <section id="awards">
+    <h2>Honors &amp; awards</h2>
+    <ul class="awards">
+      {awards.map((a) => (
+        <li>
+          <span><strong>{a.award}</strong>, {a.competition}</span>
+          <span class="dates">{a.date}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section id="leadership" class="compact">
+    <h2>Leadership &amp; activities</h2>
+    {leadership.map((e) => <Entry {...e} />)}
+  </section>
+
+  <section id="skills">
+    <h2>Skills &amp; interests</h2>
+    <dl class="skills">
+      {skills.map((s) => (<><dt>{s.group}</dt><dd>{s.items}</dd></>))}
+      <dt>Interests</dt><dd>{interests}</dd>
+    </dl>
+  </section>
+</Base>
+
+<script>
+  document.getElementById("print")?.addEventListener("click", () => window.print());
+</script>

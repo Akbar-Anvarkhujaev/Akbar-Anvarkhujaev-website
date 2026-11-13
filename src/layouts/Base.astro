@@ -1,0 +1,89 @@
+---
+import "@fontsource-variable/inter";
+import "@fontsource-variable/source-serif-4";
+import "katex/dist/katex.min.css";
+import "../styles/global.css";
+import { getImage } from "astro:assets";
+import headshot from "../assets/headshot.jpg";
+import { profile } from "../data/profile";
+
+interface Props {
+  title?: string;
+  description?: string;
+  frontmatter?: { title?: string; description?: string };
+  /** Wider content column, used by the Projects page. */
+  wide?: boolean;
+}
+
+const fm = Astro.props.frontmatter ?? {};
+const pageTitle = Astro.props.title ?? fm.title;
+const title = pageTitle ? `${pageTitle} · ${profile.name}` : profile.name;
+const description =
+  Astro.props.description ??
+  fm.description ??
+  "Mathematics & Economics at UCLA and LSE. NeurIPS 2026 co-author interested in quantitative research and trading.";
+const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ""), Astro.site);
+const ogImage = await getImage({ src: headshot, width: 600, height: 600, format: "jpg" });
+const ogImageUrl = new URL(ogImage.src, Astro.site);
+const here = Astro.url.pathname.replace(/\.html$/, "");
+const nav = [
+  { label: "Research", href: "/#research", active: false },
+  { label: "Projects", href: "/projects", active: here.startsWith("/projects") },
+  { label: "Resume", href: "/resume", active: here === "/resume" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: profile.name,
+      url: Astro.site?.toString(),
+      sameAs: [profile.linkedin, profile.github],
+      alumniOf: ["University of California, Los Angeles", "London School of Economics and Political Science"],
+    })} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class:list={["wrap", "nav", { wide: Astro.props.wide }]} aria-label="Main">
+        <a class="brand" href="/">{profile.name}</a>
+        <a class="home-link" href="/" aria-label="Home">Home</a>
+        <ul>
+          {nav.map((n) => (
+            <li><a href={n.href} class:list={{ active: n.active }} aria-current={n.active ? "page" : undefined}>{n.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+    <main id="main" class:list={["wrap", { wide: Astro.props.wide }]}>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class:list={["wrap", "footer-inner", { wide: Astro.props.wide }]}>
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+        <span class="footer-links">
+          <a href={`mailto:${profile.emails[0]}`}>Email</a>
+          <a href={profile.linkedin} rel="me noopener" target="_blank">LinkedIn</a>
+          <a href={profile.github} rel="me noopener" target="_blank">GitHub</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+---
+import type { Entry } from "../data/profile";
+type Props = Entry;
+const { org, role, place, dates, points } = Astro.props;
+---
+
+<div class="entry">
+  <div class="entry-head">
+    <h3>{org}</h3>
+    <span class="dates">{dates}</span>
+  </div>
+  <p class="role">{role} · {place}</p>
+  {points && points.length > 0 && (
+    <ul>{points.map((p) => <li>{p}</li>)}</ul>
+  )}
+</div>

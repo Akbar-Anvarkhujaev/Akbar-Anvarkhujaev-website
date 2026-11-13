@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import { hasWriteup, rich } from "../lib/rich";
+
+interface Props { project: CollectionEntry<"projects"> }
+const { project } = Astro.props;
+const d = project.data;
+const writeup = hasWriteup(project.body);
+const href = `/projects/${project.id}`;
+const ext = { target: "_blank", rel: "noopener" };
+---
+
+<article class:list={["card", { "has-image": d.image }]}>
+  <div class="card-body">
+    <div class="card-head">
+      <h3>{writeup ? <a href={href}>{d.title}</a> : d.title}</h3>
+      {d.status === "in-progress" && <span class="badge">In progress</span>}
+    </div>
+    <p set:html={rich(d.summary)} />
+    {d.metric && <p class="metric" set:html={rich(d.metric)} />}
+    {d.features.length > 0 && (
+      <ul class="features">{d.features.map((f) => <li set:html={rich(f)} />)}</ul>
+    )}
+    {d.tags.length > 0 && <ul class="tags">{d.tags.map((t) => <li>{t}</li>)}</ul>}
+    {(d.demo || writeup || d.repo) && (
+      <div class="card-actions">
+        {d.demo && <a class="btn primary" href={d.demo} {...ext}>Visit website</a>}
+        {writeup && <a href={href}>Write-up →</a>}
+        {d.repo && <a href={d.repo} {...ext}>Code →</a>}
+      </div>
+    )}
+    {d.note && <p class="note">{d.note}</p>}
+  </div>
+  {d.image && (
+    <a class="card-image" href={d.demo ?? (writeup ? href : d.repo) ?? href} {...(d.demo ? ext : {})} tabindex="-1" aria-hidden="true">
+      <Image src={d.image} alt={d.imageAlt ?? `Preview of ${d.title}`} widths={[400, 800]} sizes="(max-width: 760px) 100vw, 384px" />
+    </a>
+  )}
+</article>
